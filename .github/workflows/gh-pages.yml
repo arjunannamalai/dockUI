@@ -13,23 +13,26 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - uses: subosito/flutter-action@v2
-        with:
-          channel: 'stable'
-          flutter-version: '3.16.5'  # Updated to a compatible version
       
-      - name: Enable Flutter Web
-        run: flutter config --enable-web
-        
-      - name: Get Dependencies
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.16.5'
+          channel: 'stable'
+      
+      - name: Install dependencies
         run: flutter pub get
-        
-      - name: Build
+      
+      - name: Enable web
+        run: flutter config --enable-web
+      
+      - name: Build web
         run: flutter build web --release --base-href "/dockUI/"
-
-      - name: Deploy
+      
+      - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build/web
           force_orphan: true
+          commit_message: "Deploy to GitHub Pages"
